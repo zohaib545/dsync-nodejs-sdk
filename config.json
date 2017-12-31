@@ -1,0 +1,4 @@
+{
+    "port": 3000,
+    "DEFAULT_URL": "https://api.dsync.com/api/realtime"
+}
