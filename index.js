@@ -1,1 +1,1 @@
-require('./examples/EndpointCreateRequest')
+require('./examples/EndpointDeleteRequest');

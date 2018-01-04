@@ -2,7 +2,8 @@
 
 const config = require('./../../config')
 const { RealtimeRequestException } = require('./../Exception/RealtimeRequestException')
-const { HttpRequest } =  require('./../Http/Request')
+const { HttpRequest } = require('./../Http/Request')
+const { Client } = require('./../Http/Client')
 
 const RealtimeRequest = class RealtimeRequest {
 
@@ -29,6 +30,7 @@ const RealtimeRequest = class RealtimeRequest {
 
     setAuthToken(authToken) {
         this.authToken = authToken
+        return this;
     }
 
     /**
@@ -45,6 +47,7 @@ const RealtimeRequest = class RealtimeRequest {
      */
     setEntityToken(entityToken) {
         this.entityToken = entityToken;
+        return this;
     }
 
     /**
@@ -61,6 +64,7 @@ const RealtimeRequest = class RealtimeRequest {
     */
     setEntityId(entityId) {
         this.entityId = entityId;
+        return this;
     }
 
     /**
@@ -155,7 +159,7 @@ const RealtimeRequest = class RealtimeRequest {
      * @return mixed
      * @throws RealtimeRequestException
      */
-    makeRequest(method, deleteAction = false) {
+    async makeRequest(method, deleteAction = false) {
         try {
             this.lastRequest = null;
             this.lastResponse = null;
@@ -166,11 +170,14 @@ const RealtimeRequest = class RealtimeRequest {
             } else {
                 httpRequest.setBody(JSON.stringify(this.getData()));
             }
-            httpRequest.addHeader('Content-Type', 'application/json').addHeader('Entity-Token', this.getEntityToken()).addHeader('Auth-Token', this.getAuthToken()).setMethod(method);
-            httpClient = new Client(this.realtimeUrl);
+            httpRequest.addHeader('Content-Type', 'application/json').
+                addHeader('Entity-Token', this.getEntityToken())
+                .addHeader('Auth-Token', this.getAuthToken())
+                .setMethod(method);
+            let httpClient = new Client(this.realtimeUrl);
 
             this.lastRequest = httpRequest;
-            let httpResponse = httpClient.send(httpRequest);
+            let httpResponse = await httpClient.send(httpRequest);
             this.lastResponse = httpResponse;
 
             //reset data and entity id
@@ -183,10 +190,15 @@ const RealtimeRequest = class RealtimeRequest {
                 if (typeof responseArray == Array && (responseArray['message'] != null || responseArray['message'] != undefined)) {
                     errorMessage = responseArray['message'];
                 }
-                throw new DOMException(httpResponse.getStatusCode() + ': ' + errorMessage);
+                throw new Error(httpResponse.getStatusCode() + ': ' + errorMessage);
             }
-        } catch (error) {
-            throw new RealtimeRequestException(error)
+
+            else {
+                return responseArray;
+            }
+        }
+        catch (error) {
+            throw new RealtimeRequestException(error);
         }
     }
 

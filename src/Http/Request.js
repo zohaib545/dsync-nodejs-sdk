@@ -3,7 +3,7 @@
 const HttpRequest = class Request {
 
     constructor() {
-        this.headers = []
+        this.headers = {}
     }
 
     /**
@@ -39,9 +39,9 @@ const HttpRequest = class Request {
      * @return array
      */
     generateHeaders() {
-        headers = []
+        headers = {}
         this.generateHeaders().forEach((value, key) => {
-            headers.push(key + ": " + value);
+            headers.key = value
         });
         return headers;
     }
