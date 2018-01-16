@@ -3,7 +3,7 @@ const config = require('./../config')
 
 let data = { 'foo': 'bar' }
 
-let request = new RealtimeRequest("3111cd874e547786e882bcde6aa87d97", "entity token", data)
+let request = new RealtimeRequest("your api key", "entity token", data)
 
 request.create().then((result) => {
     //RESULT COMES HERE

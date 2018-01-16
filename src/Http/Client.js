@@ -1,6 +1,7 @@
 'use strict'
 
 const request = require('request-promise');
+const { Response } = require('./Response');
 const config = require('./../../config');
 
 let Client = class Client {
@@ -26,7 +27,9 @@ let Client = class Client {
                 body: req.getBody()
             };
             let response = await request.post(options);
-            return JSON.parse(response);
+            let httpResponse = new Response();
+            httpResponse.setBody(response);
+            return httpResponse;
         }
         else if (req.getMethod() == 'GET') {
             let options = {
@@ -34,7 +37,9 @@ let Client = class Client {
                 headers: req.getHeaders()
             };
             let response = await request.get(options);
-            return JSON.parse(response);
+            let httpResponse = new Response();
+            httpResponse.setBody(response);
+            return httpResponse;
         }
         else if (req.getMethod() == 'DELETE') {
             let options = {
@@ -42,7 +47,9 @@ let Client = class Client {
                 headers: req.getHeaders()
             };
             let response = await request.delete(options);
-            return JSON.parse(response);
+            let httpResponse = new Response();
+            httpResponse.setBody(response);
+            return httpResponse;
         }
         else if (req.getMethod() == 'PUT') {
             let options = {
@@ -51,7 +58,9 @@ let Client = class Client {
                 body: req.getBody()
             };
             let response = await request.put(options);
-            return JSON.parse(response);
+            let httpResponse = new Response();
+            httpResponse.setBody(response);
+            return httpResponse;
         }
     }
 }
